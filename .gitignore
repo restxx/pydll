@@ -16,6 +16,8 @@
 *.opendb
 *.db
 *.sdf
+*.VC.db
+*.opendb
 
 # Compiled Dynamic libraries
 *.so
