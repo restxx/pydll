@@ -1,17 +1,14 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
-#define BOOST_PYTHON_STATIC_LIB
-
 #include "stdafx.h"
-#include <boost/python.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
-using namespace boost::python;
 
 #include <memory>
 #include <iostream>
-#include <winnt.h>
 
+#define BOOST_PYTHON_STATIC_LIB
+#include <boost/python.hpp>
+using namespace boost::python;
 
+typedef unsigned char   UCHAR;
 
 BOOL APIENTRY DllMain(HMODULE hModule,
     DWORD  ul_reason_for_call,
@@ -68,15 +65,15 @@ public:
 
     void SetItem(list& item) 
     {        
-
         auto n = len(item);
-        std::unique_ptr<UCHAR []> char_Ptr(new UCHAR [int(n)]() );
+        //std::unique_ptr<UCHAR []> char_Ptr(new UCHAR [int(n)]() ); //初始值用0填充
+        auto char_Ptr = std::make_unique<UCHAR []>(n);  //初始值用默认0填充
         auto array = char_Ptr.get();
 
         for (auto i = 0; i < n; ++i)
-        {
+        {   
             UCHAR it = extract<UCHAR>(item[i]);
-             array[i] = it;
+            array[i] = it;
 
             printf("%x ", array[i]);
             item[i] = 0x55;
@@ -145,3 +142,5 @@ BOOST_PYTHON_MODULE(pydll)
 
     def("addA", &addA);
 }
+
+//auto func = PyInit_pydll;
