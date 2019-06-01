@@ -8,6 +8,8 @@
 using namespace boost::python;
 
 #include <memory>
+#include <iostream>
+#include <winnt.h>
 
 
 
@@ -64,18 +66,37 @@ public:
     }
 
 
-    void SetItem(list& item) {        
+    void SetItem(list& item) 
+    {        
 
         auto n = len(item);
-        std::shared_ptr<char> n_char = std::make_shared<char>(int(n));
+        std::unique_ptr<UCHAR []> char_Ptr(new UCHAR [int(n)]() );
+        auto array = char_Ptr.get();
 
         for (auto i = 0; i < n; ++i)
         {
-            unsigned char it = extract<unsigned char>(item[i]);
-            //printf("%x", it);
+            UCHAR it = extract<UCHAR>(item[i]);
+             array[i] = it;
+
+            printf("%x ", array[i]);
             item[i] = 0x55;
         }
-        //printf("\n");
+        printf("\n");
+        std::cout << char_Ptr.get() << std::endl;
+    }
+
+    void SetDict(dict &dc)
+    {
+        //int it = extract<int>(dc.attr('test'));
+        //printf("%d\n", extract<int>(dc.get('test')));
+    }
+
+    void SetUint(UINT a) 
+    {
+        printf("%u\n", a);
+        printf("%d\n", a);
+        printf("%x\n", a);
+        printf("%X\n", a);
     }
 
 private:
@@ -117,6 +138,9 @@ BOOST_PYTHON_MODULE(pydll)
         .def("SetAge", &Player::SetAge)
         .def("GetAge", &Player::GetAge)
         .def("SetItem", &Player::SetItem)
+        .def("SetDict", &Player::SetDict)
+        .def("SetUint", &Player::SetUint)
+
         ;
 
     def("addA", &addA);

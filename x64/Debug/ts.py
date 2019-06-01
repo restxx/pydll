@@ -26,13 +26,13 @@ a = list(buf)
 player.SetItem(a)
 print(a)
 
+player.SetDict({"test": 110})
+
+
+a= int.from_bytes([0,0,0,0xF0], "little", signed=False)
+player.SetUint(a)
+
 print(pydll.MyEnum.TS0)
 
-# p = (c_byte * 5)()
-# for idx, i in enumerate(buf):
-#     p[idx] = i
-# m = cast(p, c_char_p)
-#
-#
 # player.Process(m, len(buf))
 # https://docs.python.org/3.6/library/ctypes.html
