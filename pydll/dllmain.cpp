@@ -69,7 +69,7 @@ public:
         //std::unique_ptr<UCHAR []> char_Ptr(new UCHAR [int(n)]() ); //初始值用0填充
         auto char_Ptr = std::make_unique<UCHAR []>(n);  //初始值用默认0填充
         auto array = char_Ptr.get();
-
+    
         for (auto i = 0; i < n; ++i)
         {   
             UCHAR it = extract<UCHAR>(item[i]);
@@ -122,6 +122,39 @@ int addA(A &a, int addVal)
 }
 
 
+
+class EncDec
+{
+public:
+    EncDec(){}
+    ~EncDec(){}
+
+    int Dec(list &items, int start, int End,  bool enc) 
+    {
+        auto nlen = (End == 0 ? len(items) - start : End - start);
+
+        auto char_Ptr = std::make_unique<UCHAR[]>(nlen);  //初始值用默认0填充
+        auto array = char_Ptr.get();
+        for (auto i = 0; i < nlen; ++i)
+        {
+            UCHAR it = extract<UCHAR>(items[start + i]);
+            array[i] = it;
+        }
+        //假装解密 替换8的倍数长度
+        auto n = nlen - nlen % 8;
+        memset(array, 1, n);
+
+        //回写到list
+        for (auto i = 0; i < nlen; ++i)
+        {
+            items[start + i] = array[i];
+        }
+
+        return nlen % 8;
+    }
+};
+
+
 BOOST_PYTHON_MODULE(pydll)
 {
     enum_<Player::MyEnum>("MyEnum")
@@ -129,6 +162,7 @@ BOOST_PYTHON_MODULE(pydll)
         .value("TS1", Player::TS1)
         .value("TS2", Player::TS2)
         ;
+
     class_<Player>("Player", init<int, int>())
         .def("SetHeight", &Player::SetHeight)
         .def("GetHeight", &Player::GetHeight)
@@ -137,10 +171,14 @@ BOOST_PYTHON_MODULE(pydll)
         .def("SetItem", &Player::SetItem)
         .def("SetDict", &Player::SetDict)
         .def("SetUint", &Player::SetUint)
+        ;
+    
+    def("addA", &addA);
+
+    class_<EncDec>("EncDec")
+        .def("Dec", &EncDec::Dec)
 
         ;
-
-    def("addA", &addA);
 }
 
 //auto func = PyInit_pydll;
