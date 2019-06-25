@@ -155,6 +155,18 @@ public:
 };
 
 
+#define thisID 24
+struct MyStruct
+{
+    int para;
+    int x = 12;
+    MyStruct() { para = thisID; }
+
+
+};
+
+
+
 BOOST_PYTHON_MODULE(pydll)
 {
     enum_<Player::MyEnum>("MyEnum")
@@ -177,6 +189,12 @@ BOOST_PYTHON_MODULE(pydll)
 
     class_<EncDec>("EncDec")
         .def("Dec", &EncDec::Dec)
+
+        ;
+
+    class_<MyStruct>("MyStruct")
+        .def_readwrite("x", &MyStruct::x)
+        .def_readwrite("para", &MyStruct::para)
 
         ;
 }

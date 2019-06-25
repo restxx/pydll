@@ -2,7 +2,11 @@
 
 import pydll
 import struct
-from ctypes import byref, c_char, cast, c_char_p, pointer, addressof, POINTER, c_ubyte, string_at, c_byte
+# from ctypes import byref, c_char, cast, c_char_p, pointer, addressof, POINTER, c_ubyte, string_at, c_byte
+
+my = pydll.MyStruct()
+print(my.x, my.para)
+
 
 player = pydll.Player(178,24)
 
